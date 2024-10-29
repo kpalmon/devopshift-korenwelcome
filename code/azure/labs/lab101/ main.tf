@@ -91,8 +91,23 @@ resource "azurerm_linux_virtual_machine" "vm-koren" {
 
 output "vm_public_ip" {
   value = azurerm_public_ip.pip-koren.ip_address
+  depends_on  = [time_sleep.wait_for_ip]  # Wait for the time_sleep resource to complete
   description = "Public IP address of the VM"
 }
+
+terraform {
+  required_providers {
+    time = {
+      source  = "hashicorp/time"
+      version = "0.7.2"  # Make sure to use the version that match latest version
+    }
+  }
+}
+
+resource "time_sleep" "wait_for_ip" {
+  create_duration = "30s"  # Wait for 30 seconds
+}
+
 
 
 
